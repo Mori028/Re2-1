@@ -3,8 +3,9 @@
 #include <cassert>
 #include "PrimitiveDrawer.h"
 #include "AxisIndicator.h"
-#define PI 3.14
 #include <random>
+#define PI 3.14
+
 //スケーリング行列
 Matrix4 CreateMatScale(Vector3 scale) {
 	Matrix4 matScale;
@@ -26,12 +27,17 @@ float GameScene::Angle(float angle)
 	return angle * PI / 180;
 }
 
+float Degree(const float& degree) {
+	float n = degree * PI / 180;
+	return n;
+}
+
 //乱数シード生成器
 std::random_device seed_gen;
 //メルセンヌ・ツイスターの乱数エンジン
 std::mt19937_64 engine(seed_gen());
 //乱数範囲の指定
-std::uniform_real_distribution<float> dist(-5.0f,5.0f);
+std::uniform_real_distribution<float> dist(-5.0f, 5.0f);
 //乱数エンジンを渡し、指定範囲からランダムな数値を得る
 float value = dist(engine);
 void GameScene::Initialize() {
@@ -43,8 +49,20 @@ void GameScene::Initialize() {
 	textureHandle_ = TextureManager::Load("mario.jpg");
 	// 3Dモデルの生成
 	model_ = Model::Create();
-	//カメラ垂直方向視野角を設定
-	viewProjection_.fovAngleY = 5*(10.0f);
+	//カメラ視点座標を設定
+	viewProjection_.eye = {0,0,-35};
+	//カメラ注視点座標を設定
+	/*viewProjection_.target = { 10,0,0 };*/
+	//カメラ上方向ベクトルを設定　（右上４５ど指定）
+	/*viewProjection_.up = { cosf(PI / 4.0f),sinf(PI / 4.0f),0.0f };*/
+	// カメラ垂直方向視野角を設定
+	viewProjection_.fovAngleY = 100 * (10.0f);
+	// アスペクト比を設定
+	viewProjection_.aspectRatio = 1.0f;
+	// ニアクリップ距離を設定
+	viewProjection_.nearZ = 52.0f;
+	// ファークリップ距離を設定
+	viewProjection_.farZ = 53.0f;
 	// ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 	//	デバッグカメラの生成
@@ -58,7 +76,7 @@ void GameScene::Initialize() {
 
 
 	//乱数範囲(回転角用)
-	std::uniform_real_distribution<float> rotDist(0.0, 2*PI);
+	std::uniform_real_distribution<float> rotDist(0.0, 2 * PI);
 	//乱数範囲(座標用)
 	std::uniform_real_distribution<float> posDist(-10.0f, 10.0f);
 
@@ -68,7 +86,7 @@ void GameScene::Initialize() {
 		worldTransform.Initialize();
 
 		// X, Y, Z 方向のスケーリングを設定
-		worldTransform.scale_ = {1 ,1 ,1};
+		worldTransform.scale_ = { 1 ,1 ,1 };
 
 		// X, Y, Z 軸の周りの回転角を設定
 		worldTransform.rotation_ = { rotDist(engine), rotDist(engine), rotDist(engine) };
@@ -167,38 +185,73 @@ void GameScene::Initialize() {
 
 		// 行列の転送
 		worldTransform.TransferMatrix();
-	}	
-	
+	}
 }
 
 void GameScene::Update() {
 	debugCamera_->Update();
+	// Fov変更処理
+	{
+		//// 上キーで視野角が広がる
+		//if (input_->PushKey(DIK_UP)) {
+		//	viewProjection_.fovAngleY += 0.1;
+		//	viewProjection_.fovAngleY < PI;
+		//		// 下キーで視野角が広がる
+		//}else if (input_->PushKey(DIK_DOWN)) {
+		//	viewProjection_.fovAngleY-= 0.1;
+		//	viewProjection_.fovAngleY > 0.0;
+		//}
+		// 行列の再計算
+		viewProjection_.UpdateMatrix();
+		// デバッグ用表示
+		debugText_->SetPos(50, 110);
+		debugText_->Printf("fovAngleY(Degree):%f", Degree(viewProjection_.fovAngleY));
+	}
+	// クリップ距離変更処理
+	{
+		// 上下キーでニアクリップ距離を増減
+		if (input_->PushKey(DIK_UP)) {
+			viewProjection_.nearZ += 0.5;
 
-	////視点移動処理
-	//{
-	//	//視点の移動ベクトル
-	//	Vector3 move = { 0,0,0 };
+		}
+		else if (input_->PushKey(DIK_DOWN)) {
+			viewProjection_.nearZ -= 0.5;
 
-	//	//視点の移動速さ
-	//	const float kEyeSpeed = 0.2f;
+		}
 
-	//	//押した方向で移動ベクトルを変更
-	//	if (input_->PushKey(DIK_W)) {
-	//		move.z += kEyeSpeed;
-	//	}
-	//	else if (input_->PushKey(DIK_S)) {
-	//		move.z -= kEyeSpeed;
-	//	}
-	//	//視点移動（ベクトルの加算）
-	//	viewProjection_.eye += move;
+		// 行列の再計算
+		viewProjection_.UpdateMatrix();
 
-	//	//行列の再計算
-	//	viewProjection_.UpdateMatrix();
-	//	//デバッグ用表示
-	//	debugText_->SetPos(50, 50);
-	//	debugText_->Printf(
-	//		"eye:(%f,%f,%f)", viewProjection_.eye.x, viewProjection_.eye.y, viewProjection_.eye.z);
-	//}
+		// デバック用表示
+		debugText_->SetPos(50, 130);
+		debugText_->Printf("nearZ: % f",
+			viewProjection_.nearZ);
+	}
+	//視点移動処理
+	{
+		//視点の移動ベクトル
+		Vector3 move = { 0,0,0 };
+
+		//視点の移動速さ
+		const float kEyeSpeed = 0.2f;
+
+		//押した方向で移動ベクトルを変更
+		if (input_->PushKey(DIK_W)) {
+			move.z += kEyeSpeed;
+		}
+		else if (input_->PushKey(DIK_S)) {
+			move.z -= kEyeSpeed;
+		}
+		//視点移動（ベクトルの加算）
+		viewProjection_.eye += move;
+
+		//行列の再計算
+		viewProjection_.UpdateMatrix();
+		//デバッグ用表示
+		debugText_->SetPos(50, 50);
+		debugText_->Printf(
+			"eye:(%f,%f,%f)", viewProjection_.eye.x, viewProjection_.eye.y, viewProjection_.eye.z);
+	}
 	////注視点移動処理
 	//{
 	//	//視注点の移動ベクトル
@@ -222,11 +275,11 @@ void GameScene::Update() {
 	//	//デバッグ用表示
 	//	debugText_->SetPos(50, 70);
 	//	debugText_->Printf(
-	//	"target:(%f,%f,%f)", viewProjection_.target.x, viewProjection_.target.y, viewProjection_.target.z);
+	//		"target:(%f,%f,%f)", viewProjection_.target.x, viewProjection_.target.y, viewProjection_.target.z);
 	//}
 	////上方向回転処理
 	//{
-	//	
+
 	//	//上方向の回転速さ
 	//	const float kUpRotSpeed = 0.05f;
 
@@ -237,7 +290,7 @@ void GameScene::Update() {
 	//		viewAngle = fmodf(viewAngle, PI * 2.0f);
 	//	}
 	//	//上方向ベクトルを計算（半径１の円周上の座標）
-	//	viewProjection_.up = {cosf(viewAngle),sinf(viewAngle),0.0f};
+	//	viewProjection_.up = { cosf(viewAngle),sinf(viewAngle),0.0f };
 
 	//	//行列の再計算
 	//	viewProjection_.UpdateMatrix();
@@ -246,23 +299,6 @@ void GameScene::Update() {
 	//	debugText_->Printf(
 	//		"up:(%f,%f,%f)", viewProjection_.eye.x, viewProjection_.eye.y, viewProjection_.eye.z);
 	//}
-	//Fov変更処理
-	{
-		//上キーで視野角が上がる
-		if (input_->PushKey(DIK_UP)) {
-			viewProjection_.fovAngleY += 1;
-			viewProjection_.fovAngleY <= PI;
-		}
-		if (input_->PushKey(DIK_DOWN)) {
-			viewProjection_.fovAngleY -= 1;
-			viewProjection_.fovAngleY > 0.0;
-		}
-		//行列の再計算
-		viewProjection_.UpdateMatrix();
-		//デバッグ用表示
-		debugText_->SetPos(50, 110);
-		debugText_->Printf("fovAngleY(Degree):%f", (viewProjection_.fovAngleY));
-	}
 }
 void GameScene::Draw() {
 
@@ -292,7 +328,7 @@ void GameScene::Draw() {
 	/// </summary>
 	/*model_->Draw(worldTransform_, viewProjection_, textureHandle_);*/
 	for (WorldTransform& worldTransform : worldTransforms_) {
-		model_->Draw(worldTransform,viewProjection_, textureHandle_);
+		model_->Draw(worldTransform, viewProjection_, textureHandle_);
 	}
 
 	// ライン描画が参照するビュープロジェクションを指定(アドレス渡し)
