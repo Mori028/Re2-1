@@ -6,6 +6,7 @@
 #include "AxisIndicator.h"
 #include "PrimitiveDrawer.h"
 
+
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	WinApp* win = nullptr;
@@ -20,7 +21,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ゲームウィンドウの作成
 	win = WinApp::GetInstance();
-	win->CreateGameWindow("LE2C_27_モリ_アツシ_AL3");
+	win->CreateGameWindow();
 
 	// DirectX初期化処理
 	dxCommon = DirectXCommon::GetInstance();

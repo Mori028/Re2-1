@@ -10,6 +10,8 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "DebugCamera.h"
+#include "AxisIndicator.h"
+#include "Player.h"
 
 /// <summary>
 /// ゲームシーン
@@ -22,6 +24,33 @@ public: // メンバ関数
   /// </summary>
 	GameScene();
 
+	//3Dモデル
+	Model* model_ = nullptr;
+
+	//自キャラ
+	Player* player_ = nullptr;
+
+	//ビュープロジェクション
+	ViewProjection viewProjection_;
+
+	//カメラ上方向の角度
+	float viewAngle = 4.0f;
+
+public:
+	//パーツID
+	enum Partid {
+		kRoot,
+		kSpine,
+		kChest,
+		kHead,
+		kArmL,
+		kArmR,
+		kHip,
+		kLegL,
+		kLegR,
+
+		kNumPartid
+	};
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
@@ -44,23 +73,16 @@ public: // メンバ関数
 
 	float Angle(float angle);
 
-	//カメラ上方向の角度
-	float viewAngle = 0.0f;
-
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 	DebugText* debugText_ = nullptr;
-	// テクスチャハンドル
+
+	//テクスチャハンドル
 	uint32_t textureHandle_ = 0;
-	// 3Dモデル
-	Model* model_ = nullptr;
-	// ワールドトランスフォーム
-	WorldTransform worldTransforms_[100];
-	// ビュープロジェクション
-	ViewProjection viewProjection_;
-	// デバッグカメラ
+
+	//デバックカメラ
 	DebugCamera* debugCamera_ = nullptr;
 
 	/// <summary>
