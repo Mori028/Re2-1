@@ -1,6 +1,10 @@
 #pragma once
 #include <WorldTransform.h>
 #include <Model.h>
+#include "DebugText.h"
+#include "Input.h"
+#include "ViewProjection.h"
+
 /// <summary>
 /// 自キャラ
 
@@ -23,7 +27,7 @@ public:
 	/// <summary>
 	///描画
 	/// </summary>
-	void Draw();
+	void Draw(ViewProjection viewProjection_);
 
 private:
 	//ワールド変換データ
@@ -32,4 +36,8 @@ private:
 	Model* model_ = nullptr;
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
+
+	Input* input_ = nullptr;
+
+	DebugText* debugText_ = nullptr;
 };
