@@ -4,6 +4,7 @@
 #include "DebugText.h"
 #include "Input.h"
 #include "ViewProjection.h"
+#include <PlayerBullet.h>
 
 /// <summary>
 /// 自キャラ
@@ -29,6 +30,11 @@ public:
 	/// </summary>
 	void Draw(ViewProjection viewProjection_);
 
+	///< summary>
+	///初期化
+	///</summary>
+	void Attack();
+
 private:
 	//ワールド変換データ
 	WorldTransform worldtransform_;
@@ -40,4 +46,7 @@ private:
 	Input* input_ = nullptr;
 
 	DebugText* debugText_ = nullptr;
+
+	//弾
+	PlayerBullet* bullet_ = nullptr;
 };
