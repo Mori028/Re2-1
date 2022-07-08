@@ -12,6 +12,8 @@
 #include "DebugCamera.h"
 #include "AxisIndicator.h"
 #include "Player.h"
+#include "Enemy.h"
+
 
 /// <summary>
 /// ゲームシーン
@@ -29,6 +31,9 @@ public: // メンバ関数
 
 	//自キャラ
 	Player* player_ = nullptr;
+
+	//敵キャラ
+	Enemy* enemy_ = nullptr;
 
 	//ビュープロジェクション
 	ViewProjection viewProjection_;

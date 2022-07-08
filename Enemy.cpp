@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include <cassert>
+#include <Function.h>
 
 
 void Enemy::Initialize(Model* model, uint32_t textureHandle)
@@ -21,6 +22,21 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle)
 void Enemy::Update()
 {
 	Vector3 move = { 0,0,0 };
+
+	//“G‚ÌˆÚ“®‚Ì‘¬‚³
+	const float enemySpeed = 0.2f;
+	//“G‚ÌˆÚ“®ˆ—
+	move = { 0, 0, -enemySpeed };
+	worldtransform_.translation_ += move;
+
+	//s—ñXV
+	worldtransform_.matWorld_ = CreateMatIdentity();
+	worldtransform_.matWorld_ *= CreateMatScale(worldtransform_.scale_);
+	worldtransform_.matWorld_ *= CreateMatRotationX(worldtransform_.rotation_);
+	worldtransform_.matWorld_ *= CreateMatRotationY(worldtransform_.rotation_);
+	worldtransform_.matWorld_ *= CreateMatRotationZ(worldtransform_.rotation_);
+	worldtransform_.matWorld_ *= CreateMatTranslation(worldtransform_.translation_);
+	worldtransform_.TransferMatrix();
 
 }
 
