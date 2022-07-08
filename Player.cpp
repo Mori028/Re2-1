@@ -25,6 +25,12 @@ void Player::Initialize(Model* model, uint32_t textureHandle){
 
 void Player::Update()
 {
+	//デスフラグの立った弾の削除
+	bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
+		return bullet->isDead();
+		});
+
+
 	Vector3 move = { 0,0,0 };
 
 	//キャラクターの移動の速さ
@@ -97,12 +103,22 @@ void Player::Draw(ViewProjection viewProjection_)
 
 void Player::Attack() {
 	if (input_->PushKey(DIK_SPACE)) {
+
+		//弾の速度
+		const float kBulletSpeed = 1.0f;
+		Vector3 velocity(0, 0, kBulletSpeed);
+
+		//速度ベクトルを自機の向きに合わせて回転させる
+		velocity = bVelocity(velocity, worldtransform_);
+
 		//弾を生成し初期化
 		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-		newBullet->Initialize(model_, worldtransform_.translation_);
+		newBullet->Initialize(model_, worldtransform_.translation_,velocity);
 
 		//弾の登録
 		bullets_.push_back(std::move(newBullet));
 	}
 
 }
+
+
