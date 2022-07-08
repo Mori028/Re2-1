@@ -10,7 +10,6 @@
 
 /// <summary>
 /// Ž©ƒLƒƒƒ‰
-
 /// </summary>
 
 class Player {
