@@ -2,7 +2,6 @@
 #include <3d/Model.h>
 #include "DebugText.h"
 #include "Input.h"
-#include <EnemyBullet.h>
 
 /// <summary>
 /// 自キャラ
@@ -27,10 +26,6 @@ public:
 	/// </summary>
 	void Draw(ViewProjection viewProjection_);
 
-	void Attack();
-
-	void Fire();
-
 	//行動フェーズ
 	enum class Phase {
 		Approach,//接近する
@@ -52,6 +47,8 @@ private:
 	//フェーズ
 	Phase phase_ = Phase::Approach;
 
-	//弾
-	std::list<std::unique_ptr<EnemyBullet>> bullets_;
+	void AccessPhaseUpdate();
+
+	// 離脱フェーズの更新
+	void EliminationPhaseUpdate();
 };
