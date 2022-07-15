@@ -36,7 +36,6 @@ public:
 	///</summary>
 	void Attack();
 
-
 private:
 	//ワールド変換データ
 	WorldTransform worldtransform_;
@@ -51,4 +50,5 @@ private:
 
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
+
 };

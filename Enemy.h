@@ -26,6 +26,11 @@ public:
 	/// </summary>
 	void Draw(ViewProjection viewProjection_);
 
+	//行動フェーズ
+	enum class Phase {
+		Approach,//接近する
+		Leave,//離脱する
+	};
 
 private:
 	//ワールド変換データ
@@ -39,5 +44,6 @@ private:
 
 	DebugText* debugText_ = nullptr;
 
-	
+	//フェーズ
+	Phase phase_ = Phase::Approach;
 };

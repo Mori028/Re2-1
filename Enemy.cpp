@@ -24,10 +24,10 @@ void Enemy::Update()
 	Vector3 move = { 0,0,0 };
 
 	//敵の移動の速さ
-	const float enemySpeed = 0.2f;
+	const float enemySpeed = 0.03f;
 	//敵の移動処理
-	move = { 0, 0, -enemySpeed };
-	worldtransform_.translation_ += move;
+	move = { 0.0f, 0.0f,enemySpeed };
+	/*worldtransform_.translation_ += move;*/
 
 	//行列更新
 	worldtransform_.matWorld_ = CreateMatIdentity();
@@ -38,6 +38,24 @@ void Enemy::Update()
 	worldtransform_.matWorld_ *= CreateMatTranslation(worldtransform_.translation_);
 	worldtransform_.TransferMatrix();
 
+	
+	switch (phase_) {
+	case Enemy::Phase::Approach:
+	default:
+	    //移動（ベクトルを加算）
+	    worldtransform_.translation_ -= move;
+	    //規定の位置に到達したら離脱
+	    if (worldtransform_.translation_.z < -10.0f) {
+	        phase_ = Enemy::Phase::Leave;
+	    }
+	    break;
+
+	case Enemy::Phase::Leave:
+	    //移動（べクトルを加算）
+		worldtransform_.translation_ += {0.02,0.02,0};
+	    break;
+
+	}
 }
 
 void Enemy::Draw(ViewProjection viewProjection_)
