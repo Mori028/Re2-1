@@ -42,17 +42,11 @@ void Enemy::Update()
 	switch (phase_) {
 	case Enemy::Phase::Approach:
 	default:
-	    //移動（ベクトルを加算）
-	    worldtransform_.translation_ -= move;
-	    //規定の位置に到達したら離脱
-	    if (worldtransform_.translation_.z < -10.0f) {
-	        phase_ = Enemy::Phase::Leave;
-	    }
+		AccessPhaseUpdate();
 	    break;
 
 	case Enemy::Phase::Leave:
-	    //移動（べクトルを加算）
-		worldtransform_.translation_ += {0.02,0.02,0};
+		EliminationPhaseUpdate();
 	    break;
 
 	}
@@ -61,4 +55,20 @@ void Enemy::Update()
 void Enemy::Draw(ViewProjection viewProjection_)
 {
 	model_->Draw(worldtransform_, viewProjection_, textureHandle_);
+}
+
+void Enemy::AccessPhaseUpdate()
+{
+	//移動（ベクトルを加算）
+	worldtransform_.translation_ -= {0.0f, 0.0f, 0.05f};
+	//規定の位置に到達したら離脱
+	if (worldtransform_.translation_.z < -10.0f) {
+		phase_ = Enemy::Phase::Leave;
+	}
+}
+
+void Enemy::EliminationPhaseUpdate()
+{
+	//移動（べクトルを加算）
+	worldtransform_.translation_ += {0.02f, 0.02f, 0.0f};
 }

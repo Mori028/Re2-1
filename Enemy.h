@@ -46,4 +46,9 @@ private:
 
 	//フェーズ
 	Phase phase_ = Phase::Approach;
+
+	void AccessPhaseUpdate();
+
+	// 離脱フェーズの更新
+	void EliminationPhaseUpdate();
 };
