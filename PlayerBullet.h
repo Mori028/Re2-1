@@ -22,6 +22,13 @@ public:
 	///</summary>
 	void Draw(const ViewProjection& viewProjection);
 
+	//衝突を検出したら呼び出されるコールバック関数
+	void OnCollision();
+
+	//ワールド座標を取得
+	Vector3 GetWorldPosition();
+
+	float GetRadius();
 public:
 
 	bool isDead() const { return isDead_; }
@@ -44,4 +51,5 @@ private:
 	//デスフラグ
 	bool isDead_ = false;
 
+	const float radius_ = 1.0f;
 };

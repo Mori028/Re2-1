@@ -36,6 +36,16 @@ public:
 	///</summary>
 	void Attack();
 
+	//ワールド座標を取得
+	Vector3 GetWorldPosition();
+
+	//衝突を検出したら呼び出されるコールバック関数
+	void OnCollision();
+
+	//弾のリストを取得
+	const std::list < std::unique_ptr<PlayerBullet>>& GetBullets() { return bullets_; }
+	float GetRadius();
+
 private:
 	//ワールド変換データ
 	WorldTransform worldtransform_;
@@ -50,5 +60,6 @@ private:
 
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
-
+	
+	const float radius_ = 1.0f;
 };

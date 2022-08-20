@@ -75,12 +75,26 @@ void Enemy::Draw(ViewProjection viewProjection_) {
 }
 
 void Enemy::Fire() {
+
+    assert(player_);
     // 弾の速度
     const float kBulletSpeed = 1.0f;
     Vector3 velocity(0, 0, kBulletSpeed);
 
-    // 速度ベクトルを自機の向きに合わせて回転させる
-    velocity = bVelocity(velocity, worldTransform_);
+    // 自機キャラのワールド座標を取得
+    Vector3 playerPos = player_->GetWorldPosition();
+    // 敵キャラのワールド座標を取得
+    Vector3 enemyPos = this->GetWorldPosition();
+    // 敵キャラ→自キャラの差分ベクトルを求める
+    Vector3 vector = playerPos;
+    vector -= enemyPos;
+    float length = (float)std::sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+    // ベクトルの正規化
+    if (length != 0) {
+        vector /= length;
+    }
+    // ベクトルの長さを、速さに合わせる
+    velocity = vector;
 
     // 自キャラの座標をコピー
     Vector3 position = worldTransform_.translation_;
@@ -91,6 +105,8 @@ void Enemy::Fire() {
 
     // 球を登録する
     bullets_.push_back(std::move(newBullet));
+
+
 }
 
 // 接近フェーズの更新
@@ -122,4 +138,32 @@ void Enemy::ApproachInitialize() {
 void Enemy::EliminationPhaseUpdate() {
     // 移動（ベクトルを加算）
     worldTransform_.translation_ += {0.05, 0.05, 0};
+    // 発射タイマーカウントダウン
+    fireTimer--;
+    // 指定時間に達した
+    if (fireTimer <= 0) {
+        // 弾を発射
+        Fire();
+        // 発射タイマーを初期化
+        fireTimer = kFireInterval;
+    }
 }
+
+Vector3  Enemy::GetWorldPosition() {
+    //ワールド座標を入れる変数
+    Vector3 worldPos;
+
+    //ワールド行列の平行移動成分を取得（ワールド座標）
+    worldPos.x = worldTransform_.matWorld_.m[3][0];
+    worldPos.y = worldTransform_.matWorld_.m[3][1];
+    worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+    return worldPos;
+
+}
+
+void Enemy::OnCollision()
+{
+}
+
+float Enemy::GetRadius() { return radius_; }
