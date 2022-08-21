@@ -70,7 +70,7 @@ void GameScene::Initialize() {
 
 	//ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&debugCamera_->GetViewProjection());
-	
+
 	//自キャラの生成
 	player_ = new Player();
 
@@ -78,7 +78,7 @@ void GameScene::Initialize() {
 	enemy_ = new Enemy();
 
 	//自キャラの初期化
-	player_->Initialize(model_,textureHandle_);
+	player_->Initialize(model_, textureHandle_);
 
 	//自キャラの初期化
 	enemy_->Initialize(model_, textureHandle_);
@@ -140,7 +140,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	
+
 	//自キャラの描画
 	player_->Draw(viewProjection_);
 
@@ -228,20 +228,21 @@ void GameScene::CheckAllcollisions()
 
 #pragma region 自弾と敵弾の当たり判定
 	for (const std::unique_ptr<PlayerBullet>& bulletA : playerBullets) {
-		for (const std::unique_ptr<PlayerBullet>& bulletB : playerBullets) {
-			//敵弾の座標
+		for (const std::unique_ptr<EnemyBullet>& bulletB : enemyBullets) {
+
+			//自弾の座標
 			posB = bulletA->GetWorldPosition();
-			//自キャラの座標
+			//敵弾の座標
 			posA = bulletB->GetWorldPosition();
 
-			//AとBの距離を求める
 			Vector3 len = Vector3sub(posA, posB);
+			//座標AとBの距離を求める
 			float distance = length(len);
 
-			//自キャラ敵弾の半径
+			//自弾と敵弾の半径
 			float radius = bulletB->GetRadius() + bulletA->GetRadius();
 
-			//自キャラと敵弾の交差判定
+			//自弾と敵弾の交差判定
 			if (distance <= radius) {
 				bulletB->OnCollision();
 				bulletA->OnCollision();
