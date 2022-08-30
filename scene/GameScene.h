@@ -13,6 +13,7 @@
 #include "AxisIndicator.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Skydome.h"
 
 
 /// <summary>
@@ -35,11 +36,18 @@ public: // メンバ関数
 	//敵キャラ
 	Enemy* enemy_ = nullptr;
 
+	//天球
+	Skydome* skydome_ = nullptr;
+
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 
 	//カメラ上方向の角度
 	float viewAngle = 4.0f;
+
+	//3Dモデル
+	Model* modelSkydome_ = nullptr;
+
 
 public:
 	//パーツID
@@ -60,7 +68,6 @@ public:
 	/// デストラクタ
 	/// </summary>
 	~GameScene();
-
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -95,4 +102,6 @@ private: // メンバ変数
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
+	
+	
 };

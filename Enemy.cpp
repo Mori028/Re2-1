@@ -112,7 +112,7 @@ void Enemy::Fire() {
 // 接近フェーズの更新
 void Enemy::AccessPhaseUpdate() {
     // 移動 (ベクトルを加算)
-    worldTransform_.translation_ -= {0.0, 0.0, 0.05};
+    worldTransform_.translation_ -= {0.0, 0.0, 0.02};
     //規定の位置に到達したら離脱
     if (worldTransform_.translation_.z < -10.0f) {
         phase_ = Enemy::Phase::Leave;

@@ -42,6 +42,7 @@ GameScene::~GameScene() {
 	delete model_;
 	delete debugCamera_;
 	delete player_;
+	delete modelSkydome_;
 }
 
 void GameScene::Initialize() {
@@ -77,11 +78,17 @@ void GameScene::Initialize() {
 	//敵キャラの生成
 	enemy_ = new Enemy();
 
+	//天球の生成
+	skydome_ = new Skydome();
+
 	//自キャラの初期化
 	player_->Initialize(model_, textureHandle_);
 
 	//自キャラの初期化
 	enemy_->Initialize(model_, textureHandle_);
+
+	//天球の初期化
+	skydome_->Initialize();
 
 	//敵キャラに自キャラのアドレスを渡す
 	enemy_->SetPlayer(player_);
@@ -110,6 +117,7 @@ void GameScene::Update() {
 	//敵キャラの更新
 	enemy_->Update();
 	CheckAllcollisions();
+	skydome_->Update();
 }
 
 void GameScene::Draw() {
@@ -145,6 +153,8 @@ void GameScene::Draw() {
 	player_->Draw(viewProjection_);
 
 	enemy_->Draw(viewProjection_);
+
+	skydome_->Draw(viewProjection_);
 	////3Dモデル
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -213,7 +223,7 @@ void GameScene::CheckAllcollisions()
 		Vector3 len = Vector3sub(posA, posB);
 		float distance = length(len);
 
-		//自キャラ敵弾の半径
+		//自弾と敵キャラの半径
 		float radius = player_->GetRadius() + bullet->GetRadius();
 
 		//自キャラと敵弾の交差判定
