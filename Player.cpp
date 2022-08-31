@@ -19,7 +19,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle){
 	//シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 	debugText_ = DebugText::GetInstance();
-
+	worldtransform_.translation_.z = 50;
 	worldtransform_.Initialize();
 }
 
@@ -48,7 +48,6 @@ void Player::Update()
 	if (input_->PushKey(DIK_DOWN)) {
 		move.y -= kCharacterSpeed;
 	}
-
 	//行列更新
 	worldtransform_.matWorld_ = CreateMatIdentity();
 	worldtransform_.matWorld_ *= CreateMatScale(worldtransform_.scale_);
@@ -56,6 +55,7 @@ void Player::Update()
 	worldtransform_.matWorld_ *= CreateMatRotationY(worldtransform_.rotation_);
 	worldtransform_.matWorld_ *= CreateMatRotationZ(worldtransform_.rotation_);
 	worldtransform_.matWorld_ *= CreateMatTranslation(worldtransform_.translation_);
+	worldtransform_.matWorld_ *= worldtransform_.parent_->matWorld_;
 	worldtransform_.TransferMatrix();
 	
 	//キーボード入力による移動処理
@@ -111,9 +111,10 @@ void Player::Attack() {
 		//速度ベクトルを自機の向きに合わせて回転させる
 		velocity = bVelocity(velocity, worldtransform_);
 
+		Vector3 position = GetWorldPosition();
 		//弾を生成し初期化
 		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-		newBullet->Initialize(model_, worldtransform_.translation_,velocity);
+		newBullet->Initialize(model_, position,velocity);
 
 		//弾の登録
 		bullets_.push_back(std::move(newBullet));

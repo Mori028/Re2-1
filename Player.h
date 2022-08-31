@@ -46,6 +46,9 @@ public:
 	const std::list < std::unique_ptr<PlayerBullet>>& GetBullets() { return bullets_; }
 	float GetRadius();
 
+	void SetParent(WorldTransform* worldTransform) {
+		worldtransform_.parent_ = worldTransform;
+	}
 private:
 	//ワールド変換データ
 	WorldTransform worldtransform_;

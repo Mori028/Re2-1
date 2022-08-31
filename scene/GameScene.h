@@ -14,6 +14,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Skydome.h"
+#include "RailCamera.h"
 
 
 /// <summary>
@@ -39,6 +40,7 @@ public: // メンバ関数
 	//天球
 	Skydome* skydome_ = nullptr;
 
+
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 
@@ -48,6 +50,8 @@ public: // メンバ関数
 	//3Dモデル
 	Model* modelSkydome_ = nullptr;
 
+	//レールカメラ
+	std::unique_ptr<RailCamera> railCamera_;
 
 public:
 	//パーツID

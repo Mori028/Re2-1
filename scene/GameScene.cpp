@@ -93,12 +93,21 @@ void GameScene::Initialize() {
 	//敵キャラに自キャラのアドレスを渡す
 	enemy_->SetPlayer(player_);
 
+	//レールカメラの生成
+	railCamera_ = std::make_unique<RailCamera>();
+	
+	railCamera_->Initialize(Vector3(0, 0, -50), Vector3(0, 0, 0));
+
+	player_->SetParent(railCamera_->GetWolrdMatrix());
 }
 
 void GameScene::Update() {
 	//デバックカメラの更新
-	debugCamera_->Update();
-
+	railCamera_->Update();
+	//railCameraをゲームシーンの方に適応する
+	viewProjection_.matView = railCamera_->getViewProjection().matView;
+	viewProjection_.matProjection = railCamera_->getViewProjection().matProjection;
+	viewProjection_.TransferMatrix();
 	//キャラクター移動処理
 	{
 		//キャラクターの移動ベクトル
