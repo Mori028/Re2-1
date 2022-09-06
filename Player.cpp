@@ -137,6 +137,10 @@ Vector3  Player::GetWorldPosition() {
 
 }
 
-void Player::OnCollision(){}
+void Player::OnCollision()
+{
+	//デスフラグ
+	isDead_ = true;
+}
 
 float Player::GetRadius() { return radius_; }

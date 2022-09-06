@@ -13,7 +13,7 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
     // テクスチャ読み込み
     textureHandle_ = TextureManager::Load("enemy.png");
 
-    worldTransform_.rotation_ = { 0, 3.0f, 0 };
+    worldTransform_.rotation_ = { 0.0f, 3.0f, 0.0f };
 
     // シングルトンインスタンスを取得する
     input_ = Input::GetInstance();
@@ -27,10 +27,6 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 }
 
 void Enemy::Update() {
-    // デスフラグの立った弾を削除
-    bullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) {
-        return bullet->IsDead();
-        });
 
     // キャラクターの移動ベクトル
     Vector3 move = { 0,0,0 };
@@ -115,7 +111,7 @@ void Enemy::Fire() {
 // 接近フェーズの更新
 void Enemy::AccessPhaseUpdate() {
     // 移動 (ベクトルを加算)
-    worldTransform_.translation_ -= {0.0, 0.0, 0.02};
+    worldTransform_.translation_ -= {0.0f, 0.0f, 0.02f};
     //規定の位置に到達したら離脱
     if (worldTransform_.translation_.z < -10.0f) {
         phase_ = Enemy::Phase::Leave;
@@ -140,7 +136,7 @@ void Enemy::ApproachInitialize() {
 // 離脱フェーズの更新
 void Enemy::EliminationPhaseUpdate() {
     // 移動（ベクトルを加算）
-    worldTransform_.translation_ += {0.05, 0.05, 0};
+    worldTransform_.translation_ += {0.05f, 0.05f, 0.0f};
     // 発射タイマーカウントダウン
     fireTimer--;
     // 指定時間に達した
@@ -167,6 +163,9 @@ Vector3  Enemy::GetWorldPosition() {
 
 void Enemy::OnCollision()
 {
+   
+       isDead_ = true;
+    
 }
 
 float Enemy::GetRadius() { return radius_; }

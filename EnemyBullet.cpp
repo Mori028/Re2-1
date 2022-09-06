@@ -36,8 +36,9 @@ void EnemyBullet::Draw(const ViewProjection& viewProjection) {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }
 
-void EnemyBullet::OnCollision()
-{
+void EnemyBullet::OnCollision() {
+
+	//デスフラグ
 	isDead_ = true;
 }
 Vector3  EnemyBullet::GetWorldPosition() {
