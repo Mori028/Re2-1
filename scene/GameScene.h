@@ -91,7 +91,7 @@ public: // メンバ関数
 
 	//自キャラ
 	Player* player_ = nullptr;
-
+	
 	//敵キャラ
 	std::list<std::unique_ptr<Enemy>> enemys_;
 

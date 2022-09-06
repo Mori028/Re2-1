@@ -13,14 +13,14 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
     // テクスチャ読み込み
     textureHandle_ = TextureManager::Load("enemy.png");
 
-    worldTransform_.rotation_ = { 0.0f, 3.0f, 0.0f };
+    worldtransform_.rotation_ = { 0.0f, 3.0f, 0.0f };
 
     // シングルトンインスタンスを取得する
     input_ = Input::GetInstance();
     debugText_ = DebugText::GetInstance();
 
     // ワールド変換の初期化
-    worldTransform_.Initialize();
+    worldtransform_.Initialize();
 
     // 接近フェーズの初期化
     ApproachInitialize();
@@ -44,7 +44,7 @@ void Enemy::Update() {
     /* worldTransform_.translation_ += move;*/
 
     // 行列更新
-    CreateMatrixUpdate(worldTransform_);
+    CreateMatrixUpdate(worldtransform_);
 
     switch (phase_) {
     case Enemy::Phase::Approach:
@@ -65,7 +65,7 @@ void Enemy::Update() {
 }
 
 void Enemy::Draw(ViewProjection viewProjection_) {
-    model_->Draw(worldTransform_, viewProjection_, textureHandle_);
+    model_->Draw(worldtransform_, viewProjection_, textureHandle_);
 
     // 弾描画
     for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
@@ -96,7 +96,7 @@ void Enemy::Fire() {
     velocity = vector;
 
     // 自キャラの座標をコピー
-    Vector3 position = worldTransform_.translation_;
+    Vector3 position = worldtransform_.translation_;
 
     // 弾を生成し、初期化
     std::unique_ptr<EnemyBullet>newBullet = std::make_unique<EnemyBullet>();
@@ -111,9 +111,9 @@ void Enemy::Fire() {
 // 接近フェーズの更新
 void Enemy::AccessPhaseUpdate() {
     // 移動 (ベクトルを加算)
-    worldTransform_.translation_ -= {0.0f, 0.0f, 0.02f};
+    worldtransform_.translation_ -= {0.0f, 0.0f, 0.02f};
     //規定の位置に到達したら離脱
-    if (worldTransform_.translation_.z < -10.0f) {
+    if (worldtransform_.translation_.z < -10.0f) {
         phase_ = Enemy::Phase::Leave;
     }
     // 発射タイマーカウントダウン
@@ -135,8 +135,11 @@ void Enemy::ApproachInitialize() {
 
 // 離脱フェーズの更新
 void Enemy::EliminationPhaseUpdate() {
+   
+   
     // 移動（ベクトルを加算）
-    worldTransform_.translation_ += {0.05f, 0.05f, 0.0f};
+    worldtransform_.translation_ += {0.05f, 0.05f, 0.0f};
+    
     // 発射タイマーカウントダウン
     fireTimer--;
     // 指定時間に達した
@@ -153,19 +156,14 @@ Vector3  Enemy::GetWorldPosition() {
     Vector3 worldPos;
 
     //ワールド行列の平行移動成分を取得（ワールド座標）
-    worldPos.x = worldTransform_.matWorld_.m[3][0];
-    worldPos.y = worldTransform_.matWorld_.m[3][1];
-    worldPos.z = worldTransform_.matWorld_.m[3][2];
+    worldPos.x = worldtransform_.matWorld_.m[3][0];
+    worldPos.y = worldtransform_.matWorld_.m[3][1];
+    worldPos.z = worldtransform_.matWorld_.m[3][2];
 
     return worldPos;
 
 }
 
-void Enemy::OnCollision()
-{
-   
-       isDead_ = true;
-    
-}
+void Enemy::OnCollision() { isDead_ = true; }
 
 float Enemy::GetRadius() { return radius_; }

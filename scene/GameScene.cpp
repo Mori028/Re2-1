@@ -101,8 +101,10 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 
 	//デスフラグの立った弾の削除
-	enemybullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
-
+	enemybullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) {
+		return bullet->isDead();
+		});
+	
 	//デバックカメラの更新
 	railCamera_->Update();
 	//railCameraをゲームシーンの方に適応する
@@ -248,7 +250,7 @@ void GameScene::CheckAllcollisions()
 		posA = enemy_->GetWorldPosition();
 		for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
 			//敵弾の座標
-			posB = bullet->GetWorldPosition();
+			posB = bullet.get()->GetWorldPosition();
 
 			//AとBの距離を求める
 			Vector3 len = Vector3sub(posA, posB);
@@ -273,9 +275,9 @@ void GameScene::CheckAllcollisions()
 		for (const std::unique_ptr<EnemyBullet>& bulletB : enemyBullets) {
 
 			//自弾の座標
-			posA = bulletA->GetWorldPosition();
+			posA = bulletA.get()->GetWorldPosition();
 			//敵弾の座標
-			posB = bulletB->GetWorldPosition();
+			posB = bulletB.get()->GetWorldPosition();
 
 			Vector3 len = Vector3sub(posA, posB);
 			//座標AとBの距離を求める

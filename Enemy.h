@@ -71,7 +71,7 @@ public:
 	bool isDead() const { return isDead_; }
 private:
 	// ワールド変換データ
-	WorldTransform worldTransform_;
+	WorldTransform worldtransform_;
 	// モデル
 	Model* model_ = nullptr;
 	// テクスチャハンドル
