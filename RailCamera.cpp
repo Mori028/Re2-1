@@ -14,7 +14,7 @@ void RailCamera::Initialize(const Vector3 position, const Vector3 rotation)
 	//ワールド変換の初期化
 	worldtransform_.Initialize();
 	//ビュープロジェクションの初期化
-	viewProjection_.farZ = 2000.0f;
+	viewProjection_.farZ = 200.0f;
 	viewProjection_.Initialize();
 }
 
@@ -54,14 +54,14 @@ void RailCamera::Update()
     //ビュープロジェクションを更新
     viewProjection_.UpdateMatrix();
 
-    debugText_->SetPos(50, 130);
+    /*debugText_->SetPos(50, 130);
     debugText_->Printf(
         "eye:(%f,%f,%f)",
         viewProjection_.eye.x,
         viewProjection_.eye.y,
-        viewProjection_.eye.z);
+        viewProjection_.eye.z);*/
 
-    if (input_->PushKey(DIK_E))
+    if (input_->PushKey(DIK_F))
     {
         worldtransform_.rotation_.y -= 0.1f;
     }

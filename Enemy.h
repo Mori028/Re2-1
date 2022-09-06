@@ -12,6 +12,8 @@
 //自機クラスの前方宣言
 class Player;
 
+class GameScene;
+
 class Enemy
 {
 public:
@@ -52,16 +54,17 @@ public:
 
 	void SetPlayer(Player* player) { player_ = player; }
 
-	//ワールド座標を取得
-	Vector3 GetWorldPosition();
+	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
+
+	//ワールド座標を取得
+	Vector3 GetWorldPosition();	
 	
-	//弾のリストを取得
-	const std::list < std::unique_ptr<EnemyBullet>>& GetBullets() { return bullets_; }
 	float GetRadius();
 
+	bool IsDead() const { return isDead_; }
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
@@ -87,4 +90,10 @@ private:
 	Player* player_ = nullptr;
 
 	const float radius_ = 1.0f;
+
+	// デスフラグ
+	bool isDead_ = false;
+
+	//ゲームシーン
+	GameScene* gameScene_ = nullptr;
 };

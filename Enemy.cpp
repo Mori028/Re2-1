@@ -10,6 +10,9 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
     model_ = model;
     textureHandle_ = textureHandle;
 
+    // テクスチャ読み込み
+    textureHandle_ = TextureManager::Load("enemy.png");
+
     worldTransform_.rotation_ = { 0, 3.0f, 0 };
 
     // シングルトンインスタンスを取得する
@@ -112,7 +115,7 @@ void Enemy::Fire() {
 // 接近フェーズの更新
 void Enemy::AccessPhaseUpdate() {
     // 移動 (ベクトルを加算)
-    worldTransform_.translation_ -= {0.0, 0.0, 0.02};
+    worldTransform_.translation_ -= {0.0, 0.0, 0.01};
     //規定の位置に到達したら離脱
     if (worldTransform_.translation_.z < -10.0f) {
         phase_ = Enemy::Phase::Leave;
@@ -149,6 +152,11 @@ void Enemy::EliminationPhaseUpdate() {
     }
 }
 
+void Enemy::OnCollision()
+{
+    isDead_ = true;
+}
+
 Vector3  Enemy::GetWorldPosition() {
     //ワールド座標を入れる変数
     Vector3 worldPos;
@@ -160,10 +168,6 @@ Vector3  Enemy::GetWorldPosition() {
 
     return worldPos;
 
-}
-
-void Enemy::OnCollision()
-{
 }
 
 float Enemy::GetRadius() { return radius_; }

@@ -127,6 +127,15 @@ void GameScene::Update() {
 	enemy_->Update();
 	CheckAllcollisions();
 	skydome_->Update();
+
+	//デスフラグの立った弾の削除
+	enemybullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
+
+	//弾更新
+	//複数
+	for (std::unique_ptr<EnemyBullet>& bullet : enemybullets_) {
+		bullet->Update();
+	}
 }
 
 void GameScene::Draw() {
@@ -164,6 +173,11 @@ void GameScene::Draw() {
 	enemy_->Draw(viewProjection_);
 
 	skydome_->Draw(viewProjection_);
+
+	//弾更新
+	for (std::unique_ptr<EnemyBullet>& bullet : enemybullets_) {
+		bullet->Draw(viewProjection_);
+	}
 	////3Dモデル
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -195,7 +209,7 @@ void GameScene::CheckAllcollisions()
 	const std::list < std::unique_ptr <PlayerBullet>>& playerBullets = player_->GetBullets();
 
 	//敵弾リストの取得
-	const std::list < std::unique_ptr <EnemyBullet>>& enemyBullets = enemy_->GetBullets();
+	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = GetBullets();
 
 #pragma region 自キャラと敵弾の当たり判定
 	//自キャラの座標
@@ -222,10 +236,10 @@ void GameScene::CheckAllcollisions()
 #pragma endregion
 
 #pragma region 自弾と敵キャラの当たり判定
-	//自キャラの座標
+
 	posA = enemy_->GetWorldPosition();
 	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
-		//敵弾の座標
+		//自弾の座標
 		posB = bullet->GetWorldPosition();
 
 		//AとBの距離を求める
@@ -237,10 +251,10 @@ void GameScene::CheckAllcollisions()
 
 		//自キャラと敵弾の交差判定
 		if (distance <= radius) {
-			//自キャラの衝突時コールバックを呼び出す
-			player_->OnCollision();
 			//敵弾の衝突時コールバックを呼び出す
 			bullet->OnCollision();
+			//敵キャラの衝突時コールバックを呼び出す
+			enemy_->OnCollision();
 		}
 	}
 #pragma endregion
@@ -270,5 +284,8 @@ void GameScene::CheckAllcollisions()
 	}
 #pragma endregion
 
-
+}
+void GameScene::AddEnemyBullet(std::unique_ptr<EnemyBullet> enemyBullet) {
+	//リストに登録する
+	enemybullets_.push_back(std::move(enemyBullet));
 }
