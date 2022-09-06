@@ -10,6 +10,9 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
     model_ = model;
     textureHandle_ = textureHandle;
 
+    // テクスチャ読み込み
+    textureHandle_ = TextureManager::Load("enemy.png");
+
     worldTransform_.rotation_ = { 0, 3.0f, 0 };
 
     // シングルトンインスタンスを取得する

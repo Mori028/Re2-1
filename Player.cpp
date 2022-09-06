@@ -16,6 +16,9 @@ void Player::Initialize(Model* model, uint32_t textureHandle){
 	model_ = model;
 	textureHandle_ = textureHandle;
 
+	// テクスチャ読み込み
+	textureHandle_ = TextureManager::Load("player.png");
+
 	//シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 	debugText_ = DebugText::GetInstance();

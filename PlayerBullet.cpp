@@ -7,7 +7,7 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 
 	model_ = model;
 	//テクスチャ読み込み
-	textureHandle_ = TextureManager::Load("mario.jpg");//black.pngがネイ
+	textureHandle_ = TextureManager::Load("shot.png");//black.pngがネイ
 
 	//ワールド変換の初期化
 	worldtransform_.Initialize();
