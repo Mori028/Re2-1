@@ -24,7 +24,7 @@ public:
 	/// <summary>
 	///更新
 	/// </summary>
-	void Update();
+	void Update(ViewProjection viewProjection);
 
 	/// <summary>
 	///描画
@@ -65,4 +65,10 @@ private:
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 	
 	const float radius_ = 1.0f;
+
+	//3Dレティクル用トランスフォーム
+	WorldTransform worldTransform3DReticle_;
+
+	//2Dレティクル用スプライト
+	std::unique_ptr<Sprite>sprite2DReticle_;
 };
