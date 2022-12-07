@@ -40,4 +40,9 @@ private:
 	Input* input_ = nullptr;
 
 	DebugText* debugText_ = nullptr;
+
+	//3Dレティクル用トランスフォーム
+	WorldTransform worldTransform3DReticle_;
+	//2Dレティクル用スプライト
+	std::unique_ptr<Sprite>sprite2DReticle_;
 };
