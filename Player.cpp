@@ -43,9 +43,9 @@ void Player::Update()
 	if (input_->PushKey(DIK_D)) {
 		move.x += kCharacterSpeed;
 	}
-	if (input_->PushKey(DIK_S)) {
+	/*if (input_->PushKey(DIK_S)) {
 		move.y -= kCharacterSpeed;
-	}
+	}*/
 	//ジャンプ
 	if (input_->TriggerKey(DIK_SPACE)) {
 		if (jumpFlg == 0) {
@@ -88,9 +88,9 @@ void Player::Update()
 	//自機のワールド座標から3Dレティクルのワールド座標を計算
 
 	//自機から3Dレティクルへの距離
-	const float kDistancePlayerTo3DReticle = 60.0f;
+	/*const float kDistancePlayerTo3DReticle = 60.0f;*/
 	//自機から3Dレティクルへのオフセット(Z+向き)
-	Vector3 offset = { 0, 0, 1.0f };
+	/*Vector3 offset = { 0, 0, 1.0f };*/
 	//自機のワールド座標の回転を反映
 
 }

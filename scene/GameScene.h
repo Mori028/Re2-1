@@ -12,6 +12,7 @@
 #include "DebugCamera.h"
 #include "AxisIndicator.h"
 #include "Player.h"
+#include "Enemy.h"
 
 /// <summary>
 /// ゲームシーン
@@ -29,7 +30,8 @@ public: // メンバ関数
 
 	//自キャラ
 	Player* player_ = nullptr;
-
+	//敵キャラ
+	Enemy* enemy_ = nullptr;
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 
@@ -38,7 +40,7 @@ public: // メンバ関数
 
 public:
 	//パーツID
-	enum Partid {
+	/*enum Partid {
 		kRoot,
 		kSpine,
 		kChest,
@@ -50,7 +52,7 @@ public:
 		kLegR,
 
 		kNumPartid
-	};
+	};*/
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
