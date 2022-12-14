@@ -42,7 +42,6 @@ GameScene::~GameScene() {
 	delete model_;
 	delete debugCamera_;
 	delete player_;
-	delete enemy_;
 }
 
 void GameScene::Initialize() {
@@ -79,12 +78,6 @@ void GameScene::Initialize() {
 	//自キャラの初期化
 	player_->Initialize(model_,textureHandle_);
 
-	//敵キャラの生成
-	enemy_ = new Enemy();
-
-	//敵キャラの初期化
-	enemy_->Initialize(model_, textureHandle_);
-
 	//ファイルの読み込み
 	LoadEnemyPopData();
 }
@@ -109,8 +102,11 @@ void GameScene::Update() {
 	player_->Update();
 	//敵発生
 	UpdataEnemyPopCommands();
-	//自キャラの更新
-	enemy_->Update();
+	//敵の更新
+	for (std::unique_ptr<Enemy>& enemy_ : enemys_) {
+		enemy_->SetGameScene(this);
+		enemy_->Update();
+	}
 }
 
 void GameScene::Draw() {
@@ -145,7 +141,9 @@ void GameScene::Draw() {
 	//自キャラの描画
 	player_->Draw(viewProjection_);
 	//敵キャラの描画
-	enemy_->Draw(viewProjection_);
+	for (std::unique_ptr<Enemy>& enemy_ : enemys_) {
+		enemy_->Draw(viewProjection_);
+	}
 	////3Dモデル
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -247,19 +245,19 @@ void GameScene::UpdataEnemyPopCommands()
 
 }
 
-//void GameScene::GenerEnemy(Vector3 EnemyPos)
-//{
-//	//敵キャラの生成
-//	std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
-//	//敵キャラの初期化
-//	newEnemy->Initialize(model_, textureHandle_);
-//
-//	//敵キャラにアドレスを渡す
-//	newEnemy->SetPlayer(player_);
-//
-//	//リストに登録する
-//	enemys_.push_back(std::move(newEnemy));
-//}
+void GameScene::GenerEnemy(Vector3 EnemyPos)
+{
+	//敵キャラの生成
+	std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
+	//敵キャラの初期化
+	newEnemy->Initialize(model_, textureHandle_);
+
+	//敵キャラにアドレスを渡す
+	newEnemy->SetPlayer(player_);
+
+	//リストに登録する
+	enemys_.push_back(std::move(newEnemy));
+}
 Vector3 GameScene::vector3(float x, float y, float z) { return Vector3(x, y, z); }
 
 Vector4 GameScene::vector4(int x, int y, int z, int w) { return Vector4(x, y, z, w); }

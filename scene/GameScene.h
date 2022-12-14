@@ -32,7 +32,7 @@ public: // メンバ関数
 	Player* player_ = nullptr;
 	
 	// 敵キャラ
-	Enemy* enemy_ = nullptr;
+	std::list<std::unique_ptr<Enemy>> enemys_;
 
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
@@ -40,17 +40,6 @@ public: // メンバ関数
 	//カメラ上方向の角度
 	float viewAngle = 4.0f;
 
-	// 敵発生コマンド
-	std::stringstream enemyPopCommands;
-
-	Vector3 vector3(float x, float y, float z);
-	Vector4 vector4(int x, int y, int z, int w);
-
-	//待機中フラグ
-	bool isStand_ = false;
-
-	//待機タイマー
-	int standTime_ = 0;
 public:
 	//パーツID
 	/*enum Partid {
@@ -101,7 +90,7 @@ public:
 	/// <summary>
 	/// 敵の発生
 	/// </summary>
-	/*void GenerEnemy(Vector3 EnemyPos);*/
+	void GenerEnemy(Vector3 EnemyPos);
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -115,6 +104,17 @@ private: // メンバ変数
 	//デバックカメラ
 	DebugCamera* debugCamera_ = nullptr;
 
+	// 敵発生コマンド
+	std::stringstream enemyPopCommands;
+
+	Vector3 vector3(float x, float y, float z);
+	Vector4 vector4(int x, int y, int z, int w);
+
+	//待機中フラグ
+	bool isStand_ = false;
+
+	//待機タイマー
+	int standTime_ = 0;
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
