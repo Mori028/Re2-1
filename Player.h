@@ -7,7 +7,6 @@
 
 /// <summary>
 /// 自キャラ
-
 /// </summary>
 
 class Player {
@@ -40,4 +39,11 @@ private:
 	Input* input_ = nullptr;
 
 	DebugText* debugText_ = nullptr;
+
+	//3Dレティクル用ワールドトランスフォーム
+	WorldTransform worldtransform3DReticle_;
+	//ジャンプ
+	int jumpFlg = 0;
+	int jumpTimer = 26;
+	
 };

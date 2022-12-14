@@ -21,6 +21,8 @@ void Player::Initialize(Model* model, uint32_t textureHandle){
 	debugText_ = DebugText::GetInstance();
 
 	worldtransform_.Initialize();
+	//3Dレティクルの初期化
+	worldtransform3DReticle_.Initialize();
 }
 
 void Player::Update()
@@ -29,23 +31,41 @@ void Player::Update()
 
 	//キャラクターの移動の速さ
 	const float kCharacterSpeed = 0.2f;
+	const float kCharacterJumpSpeed = 0.6f;
+	const float gravitySpeed = 0.15f;
 
-	if (input_->PushKey(DIK_LEFT)) {
+	//常に重力を足してく
+	move.y -= gravitySpeed;
+	//プレイヤーの移動
+	if (input_->PushKey(DIK_A)) {
 		move.x -= kCharacterSpeed;
 	}
-	if (input_->PushKey(DIK_RIGHT)) {
+	if (input_->PushKey(DIK_D)) {
 		move.x += kCharacterSpeed;
 	}
-	if (input_->PushKey(DIK_UP)) {
-		move.y += kCharacterSpeed;
-	}
-	if (input_->PushKey(DIK_DOWN)) {
+	if (input_->PushKey(DIK_S)) {
 		move.y -= kCharacterSpeed;
+	}
+	//ジャンプ
+	if (input_->TriggerKey(DIK_SPACE)) {
+		if (jumpFlg == 0) {
+			jumpFlg = 1;
+		}
+	}
+	if (jumpFlg == 1) {
+		jumpTimer--;
+	}
+	if (jumpTimer <= 25 && jumpTimer >= 1) {
+		move.y += kCharacterJumpSpeed;
+	}
+	if (jumpTimer <= -80) {
+		jumpFlg = 0;
+		jumpTimer = 26;
 	}
 	
 	//キーボード入力による移動処理
 	const float kMoveLimitX = 35;
-	const float kMoveLimitY = 18;
+	const float kMoveLimitY = 10;
 
 	//範囲を超えない処理
 	worldtransform_.translation_.x = max(worldtransform_.translation_.x, -kMoveLimitX);
@@ -64,6 +84,14 @@ void Player::Update()
 	worldtransform_.matWorld_ *= CreateMatRotationZ(worldtransform_.rotation_);
 	worldtransform_.matWorld_ *= CreateMatTranslation(worldtransform_.translation_);
 	worldtransform_.TransferMatrix();
+
+	//自機のワールド座標から3Dレティクルのワールド座標を計算
+
+	//自機から3Dレティクルへの距離
+	const float kDistancePlayerTo3DReticle = 60.0f;
+	//自機から3Dレティクルへのオフセット(Z+向き)
+	Vector3 offset = { 0, 0, 1.0f };
+	//自機のワールド座標の回転を反映
 
 }
 
