@@ -13,7 +13,7 @@
 #include "AxisIndicator.h"
 #include "Player.h"
 #include "Enemy.h"
-
+#include <sstream>
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -30,14 +30,27 @@ public: // メンバ関数
 
 	//自キャラ
 	Player* player_ = nullptr;
-	//敵キャラ
+	
+	// 敵キャラ
 	Enemy* enemy_ = nullptr;
+
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 
 	//カメラ上方向の角度
 	float viewAngle = 4.0f;
 
+	// 敵発生コマンド
+	std::stringstream enemyPopCommands;
+
+	Vector3 vector3(float x, float y, float z);
+	Vector4 vector4(int x, int y, int z, int w);
+
+	//待機中フラグ
+	bool isStand_ = false;
+
+	//待機タイマー
+	int standTime_ = 0;
 public:
 	//パーツID
 	/*enum Partid {
@@ -74,6 +87,21 @@ public:
 	void Draw();
 
 	float Angle(float angle);
+
+	/// <summary>
+	/// 敵発生データの読み込み
+	/// </summary>
+	void LoadEnemyPopData();
+
+	/// <summary>
+	/// 敵発生コマンドの更新
+	/// </summary>
+	void UpdataEnemyPopCommands();
+
+	/// <summary>
+	/// 敵の発生
+	/// </summary>
+	/*void GenerEnemy(Vector3 EnemyPos);*/
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;

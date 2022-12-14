@@ -3,9 +3,10 @@
 #include "DebugText.h"
 #include "Input.h"
 
-/// <summary>
-/// 自キャラ
-/// </summary>
+//自機クラスの前方宣言
+class Player;
+
+class GameScene;
 
 class Enemy {
 public:
@@ -32,6 +33,10 @@ public:
 		Leave,//離脱する
 	};
 
+	void SetPlayer(Player* player) { player_ = player; }
+
+	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
+
 private:
 	//ワールド変換データ
 	WorldTransform worldtransform_;
@@ -51,4 +56,10 @@ private:
 
 	// 離脱フェーズの更新
 	void EliminationPhaseUpdate();
+
+	//自キャラ
+	Player* player_ = nullptr;
+
+	//ゲームシーン
+	GameScene* gameScene_ = nullptr;
 };

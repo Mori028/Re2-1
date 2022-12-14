@@ -4,6 +4,7 @@
 #include "PrimitiveDrawer.h"
 #include <random>
 #include "Function.h"
+#include <fstream>
 #define PI 3.14
 
 float GameScene::Angle(float angle)
@@ -84,6 +85,8 @@ void GameScene::Initialize() {
 	//敵キャラの初期化
 	enemy_->Initialize(model_, textureHandle_);
 
+	//ファイルの読み込み
+	LoadEnemyPopData();
 }
 
 void GameScene::Update() {
@@ -104,6 +107,8 @@ void GameScene::Update() {
 
 	//自キャラの更新
 	player_->Update();
+	//敵発生
+	UpdataEnemyPopCommands();
 	//自キャラの更新
 	enemy_->Update();
 }
@@ -162,3 +167,99 @@ void GameScene::Draw() {
 
 #pragma endregion
 }
+
+void GameScene::LoadEnemyPopData() {
+
+	//ファイルを開く
+	std::ifstream file;
+	file.open("Resources/enemyPop.csv");
+
+	assert(file.is_open());
+
+	//ファイルの内容を文字列ストリームにコピー
+	enemyPopCommands << file.rdbuf();
+
+	//ファイルを閉じる
+	file.close();
+
+}
+
+void GameScene::UpdataEnemyPopCommands()
+{
+	//待機処理
+	if (isStand_) {
+		standTime_--;
+		if (standTime_ <= 0) {
+			//待機完了
+			isStand_ = false;
+		}
+		return;
+	}
+
+	// 1行分の文字列を入れる変数
+	std::string line;
+
+	//コマンド実行ループ
+	while (getline(enemyPopCommands, line)) {
+		// 1行分の文字数をストリームに変換して解折しやすくなる
+		std::istringstream line_stream(line);
+
+		std::string word;
+		//,区切りで行の先頭文字を取得
+		getline(line_stream, word, ',');
+
+		//"//"から始まる行はコメント
+		if (word.find("//") == 0) {
+			//コメント行を飛ばす
+			continue;
+		}
+		// POPコマンド
+		if (word.find("POP") == 0) {
+			// X座標
+			std::getline(line_stream, word, ',');
+			float x = static_cast<float>(std::atof(word.c_str()));
+
+			// Y座標
+			std::getline(line_stream, word, ',');
+			float y = static_cast<float>(std::atof(word.c_str()));
+
+			// Z座標
+			std::getline(line_stream, word, ',');
+			float z = static_cast<float>(std::atof(word.c_str()));
+
+			/*GenerEnemy(Vector3(x, y, z));*/
+		}
+		// WAITコマンド
+		else if (word.find("WAIT") == 0) {
+			std::getline(line_stream, word, ',');
+
+			//待ち時間
+			int32_t waitTime = std::atoi(word.c_str());
+
+			//待機開始
+			isStand_ = true;
+			standTime_ = waitTime;
+
+			//ループを抜ける
+			break;
+		}
+	}
+
+}
+
+//void GameScene::GenerEnemy(Vector3 EnemyPos)
+//{
+//	//敵キャラの生成
+//	std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
+//	//敵キャラの初期化
+//	newEnemy->Initialize(model_, textureHandle_);
+//
+//	//敵キャラにアドレスを渡す
+//	newEnemy->SetPlayer(player_);
+//
+//	//リストに登録する
+//	enemys_.push_back(std::move(newEnemy));
+//}
+Vector3 GameScene::vector3(float x, float y, float z) { return Vector3(x, y, z); }
+
+Vector4 GameScene::vector4(int x, int y, int z, int w) { return Vector4(x, y, z, w); }

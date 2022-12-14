@@ -1,0 +1,9 @@
+//コマンド	x	y	z
+WAIT	60		
+POP	6	8	100
+WAIT	260		
+POP	-6	8	105
+WAIT	460		
+POP	-12	-8	110
+WAIT	660		
+POP	0	0	130
