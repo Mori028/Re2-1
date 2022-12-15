@@ -28,6 +28,8 @@ public:
 	/// </summary>
 	void Draw(ViewProjection viewProjection_);
 
+	// ワールド座標を取得
+	Vector3 GetWorldPosition();
 private:
 	//ワールド変換データ
 	WorldTransform worldtransform_;

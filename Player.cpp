@@ -15,10 +15,14 @@ void Player::Initialize(Model* model, uint32_t textureHandle){
 
 	model_ = model;
 	textureHandle_ = textureHandle;
-
+	// テクスチャ読み込み
+	textureHandle_ = TextureManager::Load("player.png");
 	//シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 	debugText_ = DebugText::GetInstance();
+
+	// 敵キャラの位置
+	worldtransform_.translation_ = { -40,-5,0 };
 
 	worldtransform_.Initialize();
 	//3Dレティクルの初期化
@@ -99,4 +103,14 @@ void Player::Draw(ViewProjection viewProjection_)
 {
 	model_->Draw(worldtransform_, viewProjection_, textureHandle_);
 
+}
+
+Vector3  Player::GetWorldPosition() {
+	//ワールド座標を入れる変数
+	Vector3 worldPos;
+	//ワールド行列の平行移動成分を取得(ワールド座標)
+	worldPos.x = worldtransform_.matWorld_.m[3][0];
+	worldPos.y = worldtransform_.matWorld_.m[3][1];
+	worldPos.z = worldtransform_.matWorld_.m[3][2];
+	return worldPos;
 }

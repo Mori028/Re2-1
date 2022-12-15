@@ -27,6 +27,9 @@ public:
 	/// </summary>
 	void Draw(ViewProjection viewProjection_);
 
+	// ワールド座標を取得
+	Vector3 GetWorldPosition();
+
 	//行動フェーズ
 	enum class Phase {
 		Approach,//接近する

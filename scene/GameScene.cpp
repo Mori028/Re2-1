@@ -85,6 +85,9 @@ void GameScene::Initialize() {
 	//敵キャラの初期化
 	enemy_->Initialize(model_, textureHandle_);
 
+	//敵キャラに自キャラのアドレスを渡す
+	enemy_->SetPlayer(player_);
+
 	//ファイルの読み込み
 	LoadEnemyPopData();
 }
