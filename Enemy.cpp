@@ -105,7 +105,7 @@ void Enemy::AccessPhaseUpdate()
 void Enemy::EliminationPhaseUpdate()
 {
 	//移動（ベクトルを加算）
-	worldtransform_.translation_ -= {0.05f, 0.0f, 0.0f};
+	worldtransform_.translation_ -= {0.2f, 0.0f, 0.0f};
 	//ジャンプ
 	worldtransform_.translation_.y += Vector;
 	Vector -= Gravity;
