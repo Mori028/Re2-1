@@ -27,6 +27,8 @@ public:
 	/// </summary>
 	void Draw(ViewProjection viewProjection_);
 
+	void SetPlayer(Player* player) { player_ = player; }
+
 	// ƒ[ƒ‹ƒhÀ•W‚ğæ“¾
 	Vector3 GetWorldPosition();
 
@@ -35,8 +37,6 @@ public:
 		Approach,//Ú‹ß‚·‚é
 		Leave,//—£’E‚·‚é
 	};
-
-	void SetPlayer(Player* player) { player_ = player; }
 
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 
