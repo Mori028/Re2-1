@@ -65,4 +65,11 @@ private:
 
 	//ゲームシーン
 	GameScene* gameScene_ = nullptr;
+
+	//ベクトル
+	float Vector = 0.3;
+	//速度
+	int SpeedX = 5;
+	//重力
+	float Gravity = 0;
 };
